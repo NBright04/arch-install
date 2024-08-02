@@ -15,6 +15,7 @@ check_partition() {
 
 # get partition names from user and check if they exist
 read -p "Enter EFI partition: " EFIpart
+read -p "Enter ROOT partition: " ROOTpart
 read -p "Enter HOME partition: " HOMEpart
 read -p "Enter SWAP partition: " SWAPpart
 
