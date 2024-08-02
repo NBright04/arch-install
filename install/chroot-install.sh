@@ -20,32 +20,7 @@ echo "natan-arch" > /etc/hostname
 systemctl enable NetworkManager.service
 
 # lib32
-# Define the path to the configuration file
-configfile="/etc/pacman.conf"
-
-# Find the line number of the [multilib] section
-multilib_line=$(awk '/^\[multilib\]/ {print NR; exit}' "$configfile")
-
-# Debugging: Print the line number of [multilib]
-echo "Line number of [multilib]: $multilib_line"
-
-# Check if the [multilib] section exists
-if [ -n "$multilib_line" ]; then
-    # Print the line immediately following [multilib]
-    next_line=$(sed -n "$((multilib_line + 1))p" "$configfile")
-    echo "Line immediately following [multilib]: $next_line"
-
-    # Check if the next line is commented out Include line and uncomment it
-    if [[ "$next_line" =~ ^#Include\ =\ /etc/pacman.d/mirrorlist$ ]]; then
-        echo "Uncommenting the Include line."
-        sudo sed -i "$((multilib_line + 1))s/^#Include = \/etc\/pacman.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist/" "$configfile"
-    else
-        echo "The next line is not the expected #Include line."
-    fi
-else
-    echo "[multilib] section not found in $configfile."
-fi
-
+mv /pacman.conf /etc/pacman.conf
 pacman -Syu --noconfirm
 
 # users
@@ -63,7 +38,7 @@ mount -t efivarfs efivarfs /sys/firmware/efi/efivars/
 # nvidia
 sudo pacman -S --noconfirm nvidia-dkms libglvnd nvidia-utils opencl-nvidia lib32-libglvnd lib32-nvidia-utils lib32-opencl-nvidia nvidia-settings
 mkdir /etc/pacman.d/hooks
-mv ./nvidia.hook /etc/pacman.d/hooks/nvidia.hook
+mv /nvidia.hook /etc/pacman.d/hooks/nvidia.hook
 
 newmodules="nvidia nvidia_modeset nvidia_uvm nvidia_drm"
 
@@ -72,10 +47,10 @@ if grep -q "^MODULES=(" /etc/mkinitcpio.conf; then
 fi
 
 # bootloader setup
-EFIpart=$(findmnt -n -o SOURCE /boot)
-EFIdevicename="${EFIpart%[0-9]*}"
+read -p "Enter efi drive /dev/sdXn: " efidevice
+
 mkdir /boot/EFI
 mkdir /boot/EFI/BOOT
-mv ./limine.hook /etc/pacman.d/hooks/limine.hook
+mv /limine.hook /etc/pacman.d/hooks/limine.hook
 cp /usr/share/limine/BOOTX64.EFI /boot/EFI/BOOT/BOOTX64.EFI
-efibootmgr --create --disk "$EFIdevicename" --part 1 --loader '\EFI\BOOT\BOOTX64.EFI' --label 'Limine Boot Manager' --unicode
+efibootmgr --create --disk "$efidevice" --part 1 --loader '\EFI\BOOT\BOOTX64.EFI' --label 'Limine Boot Manager' --unicode

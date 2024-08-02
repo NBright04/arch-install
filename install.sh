@@ -4,9 +4,6 @@
 # stop after an error
 set -e
 
-# temp
-read -p "Enter drive /dev/sdXn: " device
-
 # make scripts executable
 find ./install -name "*.sh" -exec chmod +x {} \;
 
@@ -37,4 +34,5 @@ cp ./install/limine.cfg /mnt/boot/limine.cfg
 cp ./install/chroot-install.sh /mnt/install.sh
 cp ./install/nvidia.hook /mnt/nvidia.hook
 cp ./install/limine.hook /mnt/limine.hook
+cp ./install/pacman.conf /mnt/pacman.conf
 arch-chroot /mnt /bin/bash /install.sh
