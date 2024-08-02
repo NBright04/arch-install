@@ -57,4 +57,5 @@ mkdir /boot/EFI
 mkdir /boot/EFI/BOOT
 mv /limine.hook /etc/pacman.d/hooks/limine.hook
 cp /usr/share/limine/BOOTX64.EFI /boot/EFI/BOOT/BOOTX64.EFI
+sleep 5
 efibootmgr --create --disk "$efidevice" --part 1 --loader '\EFI\BOOT\BOOTX64.EFI' --label 'Limine Boot Manager' --unicode

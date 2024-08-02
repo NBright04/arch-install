@@ -32,6 +32,8 @@ yes | pacstrap -K /mnt base linux linux-headers linux-firmware intel-ucode limin
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # copy limine.cfg
+sleep 5
+read -p "Enter ROOT partition: " ROOTpart
 UUID=$(lsblk -dno UUID "/dev/$ROOTpart")
 
 if grep -q "^    CMDLINE=root=UUID=" ./limine.cfg; then
