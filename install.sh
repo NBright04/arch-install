@@ -1,6 +1,10 @@
 #!/bin/bash
 # uwubright
 
+# TODO:
+# 1. UUID is not saved into limine.cfg
+# 2. bootloadersetup is broken 1. might be the reason
+
 # stop after an error
 set -e
 
@@ -28,6 +32,12 @@ yes | pacstrap -K /mnt base linux linux-headers linux-firmware intel-ucode limin
 genfstab -U /mnt >> /mnt/etc/fstab
 
 # copy limine.cfg
+UUID=$(lsblk -dno UUID "/dev/$ROOTpart")
+
+if grep -q "^    CMDLINE=root=UUID=" ./limine.cfg; then
+    sudo sed -i "s/^    CMDLINE=root=UUID=[^ ]*/    CMDLINE=root=UUID=$UUID/" ./limine.cfg
+fi
+
 cp ./install/limine.cfg /mnt/boot/limine.cfg
 
 # continue install in chroot

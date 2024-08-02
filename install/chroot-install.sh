@@ -46,7 +46,7 @@ if grep -q "^MODULES=(" /etc/mkinitcpio.conf; then
     sudo sed -i "s/^MODULES=(/MODULES=($newmodules/" /etc/mkinitcpio.conf
 fi
 
-sudo pacman -S --noconfirm xorg lxdm
+sudo pacman -S --noconfirm xorg lxdm budgie
 
 systemctl enable lxdm
 
