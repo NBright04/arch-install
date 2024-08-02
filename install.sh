@@ -33,8 +33,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 # copy limine.cfg
 sleep 5
-read -p "Enter ROOT partition: " ROOTpart
-UUID=$(lsblk -dno UUID "/dev/$ROOTpart")
+UUID=$(findmnt /mnt -o UUID -n)
 
 if grep -q "^    CMDLINE=root=UUID=" ./limine.cfg; then
     sudo sed -i "s/^    CMDLINE=root=UUID=[^ ]*/    CMDLINE=root=UUID=$UUID/" ./limine.cfg

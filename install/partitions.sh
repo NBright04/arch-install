@@ -15,7 +15,6 @@ check_partition() {
 
 # get partition names from user and check if they exist
 read -p "Enter EFI partition: " EFIpart
-read -p "Enter ROOT partition: " ROOTpart
 read -p "Enter HOME partition: " HOMEpart
 read -p "Enter SWAP partition: " SWAPpart
 
@@ -36,8 +35,3 @@ mount --mkdir "/dev/$HOMEpart" /mnt/home
 swapon "/dev/$SWAPpart"
 
 # bootloader preconfig
-UUID=$(lsblk -dno UUID "/dev/$ROOTpart")
-
-if grep -q "^    CMDLINE=root=UUID=" ./limine.cfg; then
-    sudo sed -i "s/^    CMDLINE=root=UUID=[^ ]*/    CMDLINE=root=UUID=$UUID/" ./limine.cfg
-fi
