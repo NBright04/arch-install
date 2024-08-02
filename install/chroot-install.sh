@@ -46,6 +46,10 @@ if grep -q "^MODULES=(" /etc/mkinitcpio.conf; then
     sudo sed -i "s/^MODULES=(/MODULES=($newmodules/" /etc/mkinitcpio.conf
 fi
 
+sudo pacman -S --noconfirm xorg lxdm
+
+systemctl enable lxdm
+
 # bootloader setup
 read -p "Enter efi drive /dev/sdXn: " efidevice
 
