@@ -34,7 +34,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 cp ./install/limine.cfg /mnt/boot/limine.cfg
 
 # continue install in chroot
-cp ./install/chroot-installer.sh /mnt/install.sh
+cp ./install/chroot-install.sh /mnt/install.sh
 cp ./install/nvidia.hook /mnt/nvidia.hook
 cp ./install/limine.hook /mnt/limine.hook
 arch-chroot /mnt /bin/bash /install.sh

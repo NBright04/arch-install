@@ -20,13 +20,13 @@ echo "natan-arch" > /etc/hostname
 systemctl enable NetworkManager.service
 
 # lib32
-if grep -q "^#\[multilib\]" /etc/pacman.conf; then
-    # Uncomment the [multilib] section by removing the leading #
-    sudo sed -i "s/^#\[multilib\]/\[multilib\]/" /etc/pacman.conf
-fi
-if grep -q "^#Include = /etc/pacman.d/mirrorlist" /etc/pacman.conf; then
-    # Uncomment the #Include line by removing the leading #
-    sudo sed -i "s/^#Include = \/etc\/pacman.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist/" /etc/pacman.conf
+multilib_line=$(awk '/^\[multilib\]/ {print NR; exit}' /etc/pacman.conf)
+
+if [ -n "$multilib_line" ]; then
+    next_line=$(sed -n "$((multilib_line + 1))p" /etc/pacman.conf)
+    if [[ "$next_line" == "#Include = /etc/pacman.d/mirrorlist" ]]; then
+        sudo sed -i "$((multilib_line + 1))s/^#Include = /etc\/pacman.d\/mirrorlist/Include = \/etc\/pacman.d\/mirrorlist/" /etc/pacman.conf
+    fi
 fi
 
 # users
